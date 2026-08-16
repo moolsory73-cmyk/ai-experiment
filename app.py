@@ -1,9 +1,8 @@
 import streamlit as st
-from elevenlabs.client import ElevenLabs
-from elevenlabs import VoiceSettings
+from elevenlabs import generate, Voice, VoiceSettings, set_api_key
 
-# ElevenLabs API 연결
-client = ElevenLabs(api_key="sk_52d36a79b1212c59494df34287265e45d61e8110f7b9d0f0")
+# ElevenLabs API Key 설정
+set_api_key("sk_52d36a79b1212c59494df34287265e45d61e8110f7b9d0f0")
 
 st.set_page_config(page_title="AI 선동 수사학 통합 실험실", layout="centered")
 st.title("🧪 뉴미디어 선동 수사학 통합 실험실")
@@ -28,19 +27,23 @@ with tab1:
     
     if st.button("🔊 음성 생성 및 청취", key="btn1"):
         with st.spinner("AI 음성 생성 중..."):
-            audio_generator = client.text_to_speech.convert(
-                voice_id="21m00Tcm4TlvDq8ikWAM",
-                text=DEFAULT_TEXT,
-                model_id="eleven_multilingual_v2",
-                voice_settings=VoiceSettings(
-                    stability=stability,
-                    similarity_boost=0.75,
-                    style=style,
-                    speed=speed
+            try:
+                audio = generate(
+                    text=DEFAULT_TEXT,
+                    voice=Voice(
+                        voice_id="21m00Tcm4TlvDq8ikWAM",
+                        settings=VoiceSettings(
+                            stability=stability,
+                            similarity_boost=0.75,
+                            style=style,
+                            use_speaker_boost=True
+                        )
+                    ),
+                    model="eleven_multilingual_v2"
                 )
-            )
-            audio_bytes = b"".join(list(audio_generator))
-            st.audio(audio_bytes, format="audio/mp3")
+                st.audio(audio, format="audio/mp3")
+            except Exception as e:
+                st.error("API 키 문제이거나 만료된 키일 수 있습니다. ElevenLabs 사이트에서 키를 다시 발급받아 확인해 보세요.")
             
     if st.button("✅ [실험 1] 이 설정값을 임계점으로 제출", key="sub1"):
         st.success(f"제출 완료! (속도: {speed} / 안정성: {stability} / 과장도: {style})")
