@@ -4,7 +4,7 @@ import requests
 st.set_page_config(page_title="AI 선동 수사학 통합 실험실", layout="centered")
 st.title("🧪 뉴미디어 선동 수사학 통합 실험실")
 
-API_KEY = "sk_52d36a79b1212c59494df34287265e45d61e8110f7b9d0f0"
+API_KEY = "sk_433d036e18791e9efa1f6e3c7faca4eb035e06d590534a01"
 VOICE_ID = "21m00Tcm4TlvDq8ikWAM" # Rachel 목소리
 
 tab1, tab2 = st.tabs(["[실험 1] 음성 파라미터 조작", "[실험 2] 미디어 연출 조작"])
